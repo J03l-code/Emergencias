@@ -47,7 +47,11 @@ function getHotelsData($hotelsFile) {
         return $defaultHotels;
     }
     $data = json_decode(file_get_contents($hotelsFile), true);
-    return !empty($data) ? $data : $defaultHotels;
+    if (!is_array($data) || count($data) < 10) {
+        file_put_contents($hotelsFile, json_encode($defaultHotels, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        return $defaultHotels;
+    }
+    return $data;
 }
 
 function saveHotelsData($hotelsFile, $data) {

@@ -57,8 +57,19 @@ const DEFAULT_HOTELES = [
   "REINA ISABEL",
   "HOTEL SAVOY INN",
   "HOTEL QUITO"
-];
-let globalHotels = DEFAULT_HOTELES;
+// Purgar almacenamiento local antiguo si existía
+try { localStorage.removeItem('emergencias_hotels_v1'); } catch (e) {}
+
+let storedHotels = null;
+try {
+  const cached = localStorage.getItem('emergencias_hotels_v2');
+  if (cached) {
+    const parsed = JSON.parse(cached);
+    if (Array.isArray(parsed) && parsed.length >= 10) storedHotels = parsed;
+  }
+} catch (e) {}
+
+let globalHotels = storedHotels || DEFAULT_HOTELES;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Inicializar reloj datetime-local predeterminado
@@ -76,9 +87,9 @@ async function fetchHotels() {
   try {
     const res = await fetch('api.php?action=get_hotels');
     const json = await res.json();
-    if (json.status === 'success' && Array.isArray(json.data) && json.data.length > 0) {
+    if (json.status === 'success' && Array.isArray(json.data) && json.data.length >= 10) {
       globalHotels = json.data;
-      localStorage.setItem('emergencias_hotels_v1', JSON.stringify(globalHotels));
+      localStorage.setItem('emergencias_hotels_v2', JSON.stringify(globalHotels));
     }
   } catch (err) {
     console.warn('API get_hotels fallback:', err);
@@ -748,7 +759,7 @@ function openDispatchModal() {
 // ----------------------------------------------------
 
 async function saveHotels() {
-  localStorage.setItem('emergencias_hotels_v1', JSON.stringify(globalHotels));
+  localStorage.setItem('emergencias_hotels_v2', JSON.stringify(globalHotels));
   populateDispatchHotelsSelect();
   renderHotelsList();
   renderDashboardTable();
