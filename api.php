@@ -20,12 +20,34 @@ $jsonFile = __DIR__ . '/database.json';
 $hotelsFile = __DIR__ . '/hotels.json';
 
 function getHotelsData($hotelsFile) {
+    $defaultHotels = [
+        "HOTEL AMBASSADOR",
+        "HOTEL DANN CARLTON",
+        "LA QUINTA BY WYNDHAM",
+        "HOTEL EMBASSY",
+        "GO QUITO HOTEL",
+        "HOTEL FENIX",
+        "HAMPTON BY HILTON QUITO",
+        "HOLIDAY INN AIRPORT",
+        "HILTON COLON QUITO",
+        "HOLIDAY INN EXPRESS QUITO",
+        "HOTEL ZEN",
+        "RIO AMAZONAS INTERNACIONAL",
+        "HOTEL IBIS",
+        "HOTEL SAN JOSE DE PUEMBO",
+        "MERCURE HOTEL ALAMEDA QUITO",
+        "HOTEL MARRIOTT",
+        "NH COLLECTION ROYAL QUITO",
+        "REINA ISABEL",
+        "HOTEL SAVOY INN",
+        "HOTEL QUITO"
+    ];
     if (!file_exists($hotelsFile)) {
-        $defaultHotels = ['Hotel Ibis', 'Hotel Marriott', 'Hotel Hilton', 'Hotel Radisson', 'Hotel Wyndham'];
         file_put_contents($hotelsFile, json_encode($defaultHotels, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         return $defaultHotels;
     }
-    return json_decode(file_get_contents($hotelsFile), true) ?: [];
+    $data = json_decode(file_get_contents($hotelsFile), true);
+    return !empty($data) ? $data : $defaultHotels;
 }
 
 function saveHotelsData($hotelsFile, $data) {

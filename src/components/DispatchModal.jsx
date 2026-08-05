@@ -136,11 +136,17 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
               <select
                 id="hotel"
                 className="form-control"
-                value={formData.hotel || 'Hotel Ibis'}
+                value={formData.hotel || 'HOTEL AMBASSADOR'}
                 onChange={(e) => setFormData({ ...formData, hotel: e.target.value })}
                 required
               >
-                {(hotels && hotels.length > 0 ? hotels : ['Hotel Ibis', 'Hotel Marriott', 'Hotel Hilton', 'Hotel Radisson', 'Hotel Wyndham']).map((h) => (
+                {(hotels && hotels.length > 0 ? hotels : [
+                  "HOTEL AMBASSADOR", "HOTEL DANN CARLTON", "LA QUINTA BY WYNDHAM", "HOTEL EMBASSY",
+                  "GO QUITO HOTEL", "HOTEL FENIX", "HAMPTON BY HILTON QUITO", "HOLIDAY INN AIRPORT",
+                  "HILTON COLON QUITO", "HOLIDAY INN EXPRESS QUITO", "HOTEL ZEN", "RIO AMAZONAS INTERNACIONAL",
+                  "HOTEL IBIS", "HOTEL SAN JOSE DE PUEMBO", "MERCURE HOTEL ALAMEDA QUITO", "HOTEL MARRIOTT",
+                  "NH COLLECTION ROYAL QUITO", "REINA ISABEL", "HOTEL SAVOY INN", "HOTEL QUITO"
+                ]).map((h) => (
                   <option key={h} value={h}>{h}</option>
                 ))}
               </select>

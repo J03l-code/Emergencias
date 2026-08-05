@@ -36,8 +36,29 @@ let kpiFilter = 'TODOS';
 let selectedReportFollowUpRequired = true;
 let selectedReportFollowUpHours = 8;
 
-const DEFAULT_HOTELES = ['Hotel Ibis', 'Hotel Marriott', 'Hotel Hilton', 'Hotel Radisson', 'Hotel Wyndham'];
-let globalHotels = JSON.parse(localStorage.getItem('emergencias_hotels_v1')) || DEFAULT_HOTELES;
+const DEFAULT_HOTELES = [
+  "HOTEL AMBASSADOR",
+  "HOTEL DANN CARLTON",
+  "LA QUINTA BY WYNDHAM",
+  "HOTEL EMBASSY",
+  "GO QUITO HOTEL",
+  "HOTEL FENIX",
+  "HAMPTON BY HILTON QUITO",
+  "HOLIDAY INN AIRPORT",
+  "HILTON COLON QUITO",
+  "HOLIDAY INN EXPRESS QUITO",
+  "HOTEL ZEN",
+  "RIO AMAZONAS INTERNACIONAL",
+  "HOTEL IBIS",
+  "HOTEL SAN JOSE DE PUEMBO",
+  "MERCURE HOTEL ALAMEDA QUITO",
+  "HOTEL MARRIOTT",
+  "NH COLLECTION ROYAL QUITO",
+  "REINA ISABEL",
+  "HOTEL SAVOY INN",
+  "HOTEL QUITO"
+];
+let globalHotels = DEFAULT_HOTELES;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Inicializar reloj datetime-local predeterminado
