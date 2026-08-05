@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/config.php';
+date_default_timezone_set('America/Guayaquil');
 
 $db = getDBConnection();
 $jsonFile = __DIR__ . '/database.json';
@@ -171,7 +172,7 @@ try {
 
     if ($method === 'POST' && $action === 'mark_arrival') {
         $code = $input['id'] ?? '';
-        $arrivalTime = date('Y-m-d H:i:s');
+        $arrivalTime = !empty($input['arrivalTime']) ? $input['arrivalTime'] : date('Y-m-d H:i:s');
 
         if ($db) {
             $stmt = $db->prepare("UPDATE emergencias SET status = 'EN_ATENCION', arrival_time = ? WHERE code = ?");

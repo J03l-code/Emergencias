@@ -341,18 +341,19 @@ function renderDashboardTable() {
 // ----------------------------------------------------
 
 async function markArrival(code) {
+  const arrivalTime = new Date().toISOString();
   try {
     await fetch('api.php?action=mark_arrival', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: code })
+      body: JSON.stringify({ id: code, arrivalTime })
     });
   } catch (e) {
     console.warn('API error:', e);
   }
 
   // Actualización local para velocidad inmediata
-  globalCases = globalCases.map(c => c.id === code ? { ...c, status: 'EN_ATENCION', arrivalTime: new Date().toISOString() } : c);
+  globalCases = globalCases.map(c => c.id === code ? { ...c, status: 'EN_ATENCION', arrivalTime } : c);
   localStorage.setItem('emergencias_local_v1', JSON.stringify(globalCases));
   renderAll();
 }
@@ -683,14 +684,23 @@ function detectCountryFromPhone(phone) {
 
 function formatDateStr(isoStr) {
   if (!isoStr) return '--:--';
-  const d = new Date(isoStr);
+  let cleanStr = String(isoStr).trim();
+  if (cleanStr.includes(' ') && !cleanStr.includes('T')) {
+    cleanStr = cleanStr.replace(' ', 'T');
+  }
+  const d = new Date(cleanStr);
   if (isNaN(d.getTime())) return isoStr;
   return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true });
 }
 
 function getElapsedTime(isoStr) {
   if (!isoStr) return '0 min';
-  const start = new Date(isoStr).getTime();
+  let cleanStr = String(isoStr).trim();
+  if (cleanStr.includes(' ') && !cleanStr.includes('T')) {
+    cleanStr = cleanStr.replace(' ', 'T');
+  }
+  const start = new Date(cleanStr).getTime();
+  if (isNaN(start)) return '0 min';
   const diffMs = Math.max(0, Date.now() - start);
   const totalMins = Math.floor(diffMs / 60000);
   const hrs = Math.floor(totalMins / 60);

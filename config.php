@@ -8,6 +8,9 @@
  * 3. Reemplaza los datos a continuación con los de tu Hostinger.
  */
 
+// Configurar huso horario predeterminado (-05:00 UTC Ecuador / Colombia / Perú / EST)
+date_default_timezone_set('America/Guayaquil');
+
 define('DB_HOST', 'localhost');          // En Hostinger suele ser 'localhost'
 define('DB_USER', 'u123456789_brigada'); // Tu usuario de MySQL en Hostinger
 define('DB_PASS', 'TuPasswordSeguro123!');// Tu contraseña de MySQL en Hostinger
