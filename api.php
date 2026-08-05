@@ -22,10 +22,10 @@ function getJsonData($jsonFile) {
                 'id' => 'EMG-1001',
                 'code' => 'EMG-1001',
                 'createdTime' => date('Y-m-d H:i:s', strtotime('-25 minutes')),
-                'responders' => 'Dr. Roberto Mendoza, Hno. Juan Pérez',
-                'zone' => 'Zona Norte - Bloque B',
+                'responders' => 'Roberto Mendoza, Juan Pérez',
+                'zone' => 'Zona A',
                 'dispatchTime' => date('Y-m-d H:i:s', strtotime('-25 minutes')),
-                'hotel' => 'Hotel Oro Verde - Centro Histórico',
+                'hotel' => 'Hotel Ibis',
                 'urgency' => 'P1',
                 'status' => 'EN_CAMINO',
                 'arrivalTime' => null,
@@ -35,10 +35,10 @@ function getJsonData($jsonFile) {
                 'id' => 'EMG-1002',
                 'code' => 'EMG-1002',
                 'createdTime' => date('Y-m-d H:i:s', strtotime('-50 minutes')),
-                'responders' => 'Dra. Elena Gómez, Hna. Sofia Ramírez',
-                'zone' => 'Zona Centro - Sector Turístico',
+                'responders' => 'Elena Gómez, Sofia Ramírez',
+                'zone' => 'Zona B',
                 'dispatchTime' => date('Y-m-d H:i:s', strtotime('-50 minutes')),
-                'hotel' => 'Hotel Wyndham Grand',
+                'hotel' => 'Hotel Ibis',
                 'urgency' => 'P2',
                 'status' => 'EN_ATENCION',
                 'arrivalTime' => date('Y-m-d H:i:s', strtotime('-18 minutes')),
@@ -48,15 +48,15 @@ function getJsonData($jsonFile) {
                 'id' => 'EMG-1003',
                 'code' => 'EMG-1003',
                 'createdTime' => date('Y-m-d H:i:s', strtotime('-3.5 hours')),
-                'responders' => 'Dr. Carlos Ruiz, Hno. David Torres',
-                'zone' => 'Zona Sur - Perímetro A',
+                'responders' => 'Carlos Ruiz, David Torres',
+                'zone' => 'Zona C',
                 'dispatchTime' => date('Y-m-d H:i:s', strtotime('-3.5 hours')),
-                'hotel' => 'Hotel Radisson Royal',
+                'hotel' => 'Hotel Ibis',
                 'urgency' => 'P2',
                 'status' => 'ATENDIDO_SEGUIMIENTO',
                 'arrivalTime' => date('Y-m-d H:i:s', strtotime('-3.1 hours')),
                 'report' => [
-                    'patientName' => 'Hno. Mateo Alvarado',
+                    'patientName' => 'Mateo Alvarado',
                     'room' => '408',
                     'vitals' => 'PA: 135/85 mmHg, FC: 82 bpm, SpO2: 97%, Temp: 37.8°C',
                     'details' => 'Presenta cuadro febril moderado y cefalea leve iniciada en horas de la mañana.',
@@ -132,7 +132,6 @@ try {
         exit();
     }
 
-    // Leer cuerpo JSON
     $input = json_decode(file_get_contents('php://input'), true);
 
     if ($method === 'POST' && $action === 'create') {

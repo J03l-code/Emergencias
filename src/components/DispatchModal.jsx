@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { X, Send, UserCheck, MapPin, Clock, Building, AlertTriangle } from 'lucide-react';
 
 export default function DispatchModal({ isOpen, onClose, onSave }) {
-  const nowStr = new Date().toISOString().slice(0, 16); // Formato YYYY-MM-DDTHH:mm para input datetime-local
+  const nowStr = new Date().toISOString().slice(0, 16);
 
   const [formData, setFormData] = useState({
     responders: '',
-    zone: 'Zona Norte',
+    zone: 'Zona A',
     dispatchTime: nowStr,
     hotel: '',
     urgency: 'P2',
@@ -66,12 +66,12 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
               type="text"
               id="responders"
               className="form-control"
-              placeholder="Ej: Dr. Roberto Mendoza, Hno. Juan Pérez"
+              placeholder="Ej: Roberto Mendoza, Juan Pérez"
               value={formData.responders}
               onChange={(e) => setFormData({ ...formData, responders: e.target.value })}
               required
             />
-            <span className="field-hint">Escriba el nombre completo de los hermanos/médicos enviados.</span>
+            <span className="field-hint">Escriba el nombre completo de los hermanos enviados.</span>
           </div>
 
           <div className="form-row-2">
@@ -87,13 +87,10 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
                 onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
                 required
               >
-                <option value="Zona Norte">Zona Norte</option>
-                <option value="Zona Centro">Zona Centro</option>
-                <option value="Zona Sur">Zona Sur</option>
-                <option value="Bloque A">Bloque A</option>
-                <option value="Bloque B">Bloque B</option>
-                <option value="Bloque C">Bloque C</option>
-                <option value="Perímetro Externo">Perímetro Externo</option>
+                <option value="Zona A">Zona A</option>
+                <option value="Zona B">Zona B</option>
+                <option value="Zona C">Zona C</option>
+                <option value="Otro">Otro</option>
               </select>
             </div>
 
@@ -123,7 +120,7 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
                 type="text"
                 id="hotel"
                 className="form-control"
-                placeholder="Ej: Hotel Oro Verde, Room / Lobby"
+                placeholder="Ej: Hotel Ibis"
                 value={formData.hotel}
                 onChange={(e) => setFormData({ ...formData, hotel: e.target.value })}
                 required

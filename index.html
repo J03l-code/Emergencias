@@ -168,20 +168,17 @@
         <form onsubmit="handleDispatchSubmit(event)" class="modal-body">
           <div class="form-group">
             <label class="form-label required"><i data-lucide="user-check"></i> Personas que asisten (Brigadistas):</label>
-            <input type="text" id="dispatchResponders" class="form-control" placeholder="Ej: Dr. Roberto Mendoza, Hno. Juan Pérez" required>
+            <input type="text" id="dispatchResponders" class="form-control" placeholder="Ej: Roberto Mendoza, Juan Pérez" required>
           </div>
 
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label required"><i data-lucide="map-pin"></i> Zona asignada:</label>
               <select id="dispatchZone" class="form-control" required>
-                <option value="Zona Norte">Zona Norte</option>
-                <option value="Zona Centro">Zona Centro</option>
-                <option value="Zona Sur">Zona Sur</option>
-                <option value="Bloque A">Bloque A</option>
-                <option value="Bloque B">Bloque B</option>
-                <option value="Bloque C">Bloque C</option>
-                <option value="Perímetro Externo">Perímetro Externo</option>
+                <option value="Zona A">Zona A</option>
+                <option value="Zona B">Zona B</option>
+                <option value="Zona C">Zona C</option>
+                <option value="Otro">Otro</option>
               </select>
             </div>
 
@@ -194,7 +191,7 @@
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label required"><i data-lucide="building"></i> Hotel de Destino:</label>
-              <input type="text" id="dispatchHotel" class="form-control" placeholder="Ej: Hotel Oro Verde" required>
+              <input type="text" id="dispatchHotel" class="form-control" placeholder="Ej: Hotel Ibis" required>
             </div>
 
             <div class="form-group">
