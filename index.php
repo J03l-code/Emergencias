@@ -276,7 +276,7 @@
             </div>
           </div>
 
-          <!-- 8. Número Telefónico con autodetección de País -->
+          <!-- 8. Número Telefónico con autodetección de País y Checkbox WhatsApp -->
           <div class="form-group highlight-box">
             <label class="form-label required">📞 8. Número Telefónico (Detección de País al escribir +):</label>
             <div class="phone-input-wrapper">
@@ -284,6 +284,13 @@
               <input type="text" id="reportPhone" class="form-control phone-input-field" placeholder="Ej: +593998765432 ó +34612345678" oninput="detectPhoneCountryLive()" required>
             </div>
             <span id="phoneCountryBadgeText" class="country-detected-badge hint">💡 Inicie con <strong>+</strong> (ej. <code>+593</code>) para detectar el país automáticamente.</span>
+
+            <div class="whatsapp-check-container" style="margin-top: 0.65rem; display: flex; align-items: center; gap: 0.5rem; background: #ffffff; padding: 0.55rem 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <input type="checkbox" id="reportHasWhatsApp" style="width: 18px; height: 18px; accent-color: #25d366; cursor: pointer;" checked>
+              <label for="reportHasWhatsApp" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 0.4rem; user-select: none;">
+                <span style="color: #25d366; font-size: 1.1rem;">💬</span> ¿Disponible para llamar / mensaje por WhatsApp?
+              </label>
+            </div>
           </div>
 
           <div class="form-grid-2 follow-up-section">

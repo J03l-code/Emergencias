@@ -14,6 +14,7 @@ export default function MedicalReportModal({ isOpen, caseData, onClose, onSubmit
     medicationReason: caseData.report?.medicationReason || '',
     conclusion: caseData.report?.conclusion || '',
     phone: caseData.report?.phone || '+593',
+    hasWhatsApp: caseData.report?.hasWhatsApp ?? true,
     followUpRequired: caseData.report?.followUpRequired ?? true,
     followUpHours: caseData.report?.followUpHours || 8,
   });
@@ -214,6 +215,19 @@ export default function MedicalReportModal({ isOpen, caseData, onClose, onSubmit
               onChange={(newPhone) => setFormData({ ...formData, phone: newPhone })}
               required={true}
             />
+
+            <div className="whatsapp-check-container" style={{ marginTop: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#ffffff', padding: '0.55rem 0.75rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+              <input
+                type="checkbox"
+                id="modalReportHasWhatsApp"
+                style={{ width: '18px', height: '18px', accentColor: '#25d366', cursor: 'pointer' }}
+                checked={formData.hasWhatsApp}
+                onChange={(e) => setFormData({ ...formData, hasWhatsApp: e.target.checked })}
+              />
+              <label htmlFor="modalReportHasWhatsApp" style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', userSelect: 'none' }}>
+                <span style={{ color: '#25d366', fontSize: '1.1rem' }}>💬</span> ¿Disponible para llamar / mensaje por WhatsApp?
+              </label>
+            </div>
           </div>
 
           <div className="form-grid-2 follow-up-section">

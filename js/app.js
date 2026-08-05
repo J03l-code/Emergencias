@@ -298,6 +298,13 @@ function renderDashboardTable() {
               <span class="flag-icon">${phoneInfo.flag}</span>
               <span class="phone-num">${escapeHtml(item.report.phone)}</span>
               <small class="country-sub">${phoneInfo.country}</small>
+              ${item.report.hasWhatsApp !== false ? `
+                <a href="https://wa.me/${item.report.phone.replace(/[^0-9]/g, '')}" target="_blank" class="badge badge-success mt-1" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.2rem; font-size:0.68rem; margin-top:0.25rem;">
+                  💬 WhatsApp
+                </a>
+              ` : `
+                <span class="badge badge-secondary mt-1" style="font-size:0.68rem; margin-top:0.25rem;">📵 Sin WhatsApp</span>
+              `}
             </div>
           ` : `<span class="text-muted">--</span>`}
         </td>
@@ -401,6 +408,8 @@ function openReportModal(code) {
   document.getElementById('reportMedReason').value = item.report?.medicationReason || '';
   document.getElementById('reportConclusion').value = item.report?.conclusion || '';
   document.getElementById('reportPhone').value = item.report?.phone || '+593';
+  const waCheck = document.getElementById('reportHasWhatsApp');
+  if (waCheck) waCheck.checked = item.report?.hasWhatsApp !== false;
 
   detectPhoneCountryLive();
   openModal('modalReport');
@@ -417,6 +426,7 @@ async function handleReportSubmit(e) {
   const medicationReason = document.getElementById('reportMedReason').value.trim();
   const conclusion = document.getElementById('reportConclusion').value.trim();
   const phone = document.getElementById('reportPhone').value.trim();
+  const hasWhatsApp = document.getElementById('reportHasWhatsApp')?.checked ?? true;
 
   const report = {
     patientName,
@@ -427,6 +437,7 @@ async function handleReportSubmit(e) {
     medicationReason,
     conclusion,
     phone,
+    hasWhatsApp,
     followUpRequired: selectedReportFollowUpRequired,
     followUpHours: selectedReportFollowUpHours,
   };
@@ -540,10 +551,17 @@ function openDetailModal(code) {
 
         <div class="detail-grid-2 mt-3">
           <div class="detail-item">
-            <span class="label">8. Teléfono Contacto:</span>
+            <span class="label">8. Teléfono Contacto & WhatsApp:</span>
             <div class="phone-badge-result">
               <span>${item.report.phone}</span>
               ${phoneInfo ? `<span class="country-tag">${phoneInfo.flag} ${phoneInfo.country}</span>` : ''}
+              ${item.report.hasWhatsApp !== false ? `
+                <a href="https://wa.me/${item.report.phone.replace(/[^0-9]/g, '')}" target="_blank" class="badge badge-success" style="text-decoration:none;">
+                  💬 WhatsApp Activo
+                </a>
+              ` : `
+                <span class="badge badge-secondary">📵 Sin WhatsApp</span>
+              `}
             </div>
           </div>
           <div class="detail-item">

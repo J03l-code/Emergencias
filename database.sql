@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `emergencias` (
   `arrival_time` DATETIME NULL,
   `notes` TEXT NULL,
   
-  -- Campos del Reporte Médico Formulario (10 Campos)
+  -- Campos del Reporte Médico Formulario (10 Campos + WhatsApp)
   `patient_name` VARCHAR(255) NULL,
   `room` VARCHAR(50) NULL,
   `vitals` TEXT NULL,
@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `emergencias` (
   `medication_reason` TEXT NULL,
   `conclusion` TEXT NULL,
   `phone` VARCHAR(50) NULL,
+  `has_whatsapp` TINYINT(1) DEFAULT 1,
   `follow_up_required` TINYINT(1) DEFAULT 0,
   `follow_up_hours` INT NULL,
   `report_submitted_at` DATETIME NULL,
@@ -34,9 +35,9 @@ CREATE TABLE IF NOT EXISTS `emergencias` (
 
 -- Insertar datos iniciales de demostración
 INSERT INTO `emergencias` 
-(`code`, `created_time`, `responders`, `zone`, `dispatch_time`, `hotel`, `urgency`, `status`, `arrival_time`, `patient_name`, `room`, `vitals`, `details`, `medication`, `medication_reason`, `conclusion`, `phone`, `follow_up_required`, `follow_up_hours`, `report_submitted_at`, `follow_up_done`)
+(`code`, `created_time`, `responders`, `zone`, `dispatch_time`, `hotel`, `urgency`, `status`, `arrival_time`, `patient_name`, `room`, `vitals`, `details`, `medication`, `medication_reason`, `conclusion`, `phone`, `has_whatsapp`, `follow_up_required`, `follow_up_hours`, `report_submitted_at`, `follow_up_done`)
 VALUES
-('EMG-1001', NOW() - INTERVAL 25 MINUTE, 'Roberto Mendoza, Juan Pérez', 'Zona A', NOW() - INTERVAL 25 MINUTE, 'Hotel Ibis', 'P1', 'EN_CAMINO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 0),
-('EMG-1002', NOW() - INTERVAL 50 MINUTE, 'Elena Gómez, Sofia Ramírez', 'Zona B', NOW() - INTERVAL 50 MINUTE, 'Hotel Ibis', 'P2', 'EN_ATENCION', NOW() - INTERVAL 18 MINUTE, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 0),
-('EMG-1003', NOW() - INTERVAL 210 MINUTE, 'Carlos Ruiz, David Torres', 'Zona C', NOW() - INTERVAL 210 MINUTE, 'Hotel Ibis', 'P2', 'ATENDIDO_SEGUIMIENTO', NOW() - INTERVAL 180 MINUTE, 'Mateo Alvarado', '408', 'PA: 135/85 mmHg, FC: 82 bpm, SpO2: 97%, Temp: 37.8°C', 'Presenta cuadro febril moderado y cefalea leve iniciada en la mañana.', 'Paracetamol 500mg (1 tab) + Suero oral', 'Control térmico y deshidratación leve por viaje', 'Cefalea por fatiga de viaje con febrícula. Estable.', '+593998765432', 1, 8, NOW() - INTERVAL 150 MINUTE, 0),
-('EMG-1004', NOW() - INTERVAL 600 MINUTE, 'Miguel Ángel, Lucía Fernández', 'Otro', NOW() - INTERVAL 600 MINUTE, 'Hotel Ibis', 'P3', 'RESUELTO', NOW() - INTERVAL 570 MINUTE, 'Carmen Benítez', '215', 'PA: 118/75 mmHg, FC: 70 bpm, SpO2: 99%, Temp: 36.4°C', 'Rozadura menor en tobillo derecho por caminata.', 'Curación antiséptica local + Vendaje estéril', 'Prevención de infección y curación de abrasión leve', 'Lesión superficial resuelta en sitio. Sin novedad.', '+34612345678', 0, NULL, NOW() - INTERVAL 540 MINUTE, 1);
+('EMG-1001', NOW() - INTERVAL 25 MINUTE, 'Roberto Mendoza, Juan Pérez', 'Zona A', NOW() - INTERVAL 25 MINUTE, 'Hotel Ibis', 'P1', 'EN_CAMINO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 0),
+('EMG-1002', NOW() - INTERVAL 50 MINUTE, 'Elena Gómez, Sofia Ramírez', 'Zona B', NOW() - INTERVAL 50 MINUTE, 'Hotel Ibis', 'P2', 'EN_ATENCION', NOW() - INTERVAL 18 MINUTE, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 0),
+('EMG-1003', NOW() - INTERVAL 210 MINUTE, 'Carlos Ruiz, David Torres', 'Zona C', NOW() - INTERVAL 210 MINUTE, 'Hotel Ibis', 'P2', 'ATENDIDO_SEGUIMIENTO', NOW() - INTERVAL 180 MINUTE, 'Mateo Alvarado', '408', 'PA: 135/85 mmHg, FC: 82 bpm, SpO2: 97%, Temp: 37.8°C', 'Presenta cuadro febril moderado y cefalea leve iniciada en la mañana.', 'Paracetamol 500mg (1 tab) + Suero oral', 'Control térmico y deshidratación leve por viaje', 'Cefalea por fatiga de viaje con febrícula. Estable.', '+593998765432', 1, 1, 8, NOW() - INTERVAL 150 MINUTE, 0),
+('EMG-1004', NOW() - INTERVAL 600 MINUTE, 'Miguel Ángel, Lucía Fernández', 'Otro', NOW() - INTERVAL 600 MINUTE, 'Hotel Ibis', 'P3', 'RESUELTO', NOW() - INTERVAL 570 MINUTE, 'Carmen Benítez', '215', 'PA: 118/75 mmHg, FC: 70 bpm, SpO2: 99%, Temp: 36.4°C', 'Rozadura menor en tobillo derecho por caminata.', 'Curación antiséptica local + Vendaje estéril', 'Prevención de infección y curación de abrasión leve', 'Lesión superficial resuelta en sitio. Sin novedad.', '+34612345678', 1, 0, NULL, NOW() - INTERVAL 540 MINUTE, 1);

@@ -104,6 +104,7 @@ try {
                         'medicationReason' => $row['medication_reason'],
                         'conclusion' => $row['conclusion'],
                         'phone' => $row['phone'],
+                        'hasWhatsApp' => isset($row['has_whatsapp']) ? (bool)$row['has_whatsapp'] : true,
                         'followUpRequired' => (bool)$row['follow_up_required'],
                         'followUpHours' => (int)$row['follow_up_hours'],
                         'reportSubmittedAt' => $row['report_submitted_at'],
@@ -195,6 +196,7 @@ try {
         $code = $input['id'] ?? '';
         $report = $input['report'] ?? [];
         $submittedAt = date('Y-m-d H:i:s');
+        $hasWhatsApp = isset($report['hasWhatsApp']) ? ($report['hasWhatsApp'] ? 1 : 0) : 1;
         $followUpReq = !empty($report['followUpRequired']) ? 1 : 0;
         $nextStatus = $followUpReq ? 'ATENDIDO_SEGUIMIENTO' : 'RESUELTO';
 
@@ -209,6 +211,7 @@ try {
                 medication_reason = ?,
                 conclusion = ?,
                 phone = ?,
+                has_whatsapp = ?,
                 follow_up_required = ?,
                 follow_up_hours = ?,
                 report_submitted_at = ?,
@@ -224,6 +227,7 @@ try {
                 $report['medicationReason'] ?? '',
                 $report['conclusion'] ?? '',
                 $report['phone'] ?? '',
+                $hasWhatsApp,
                 $followUpReq,
                 $report['followUpHours'] ?? null,
                 $submittedAt,
