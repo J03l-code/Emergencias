@@ -316,7 +316,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" onclick="closeModal('modalReport')">Cancelar</button>
-            <button type="submit" class="btn btn-emerald shadow-emerald"><i data-lucide="clipboard-check"></i> Enviar Reporte al Dashboard</button>
+            <button type="submit" class="btn btn-emerald shadow-emerald"><i data-lucide="clipboard-check"></i> Enviar Informe</button>
           </div>
         </form>
       </div>

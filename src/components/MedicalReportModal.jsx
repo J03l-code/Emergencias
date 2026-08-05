@@ -284,7 +284,7 @@ export default function MedicalReportModal({ isOpen, caseData, onClose, onSubmit
               Cancelar
             </button>
             <button type="submit" className="btn btn-emerald shadow-emerald">
-              <ClipboardCheck size={18} /> Enviar Reporte al Dashboard
+              <ClipboardCheck size={18} /> Enviar Informe
             </button>
           </div>
         </form>
