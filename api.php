@@ -20,8 +20,8 @@ function getJsonData($jsonFile) {
     if (!file_exists($jsonFile)) {
         $initial = [
             [
-                'id' => 'EMG-1001',
-                'code' => 'EMG-1001',
+                'id' => 'EMG-001',
+                'code' => 'EMG-001',
                 'createdTime' => date('Y-m-d H:i:s', strtotime('-25 minutes')),
                 'responders' => 'Roberto Mendoza, Juan Pérez',
                 'zone' => 'Zona A',
@@ -33,8 +33,8 @@ function getJsonData($jsonFile) {
                 'report' => null
             ],
             [
-                'id' => 'EMG-1002',
-                'code' => 'EMG-1002',
+                'id' => 'EMG-002',
+                'code' => 'EMG-002',
                 'createdTime' => date('Y-m-d H:i:s', strtotime('-50 minutes')),
                 'responders' => 'Elena Gómez, Sofia Ramírez',
                 'zone' => 'Zona B',
@@ -46,8 +46,8 @@ function getJsonData($jsonFile) {
                 'report' => null
             ],
             [
-                'id' => 'EMG-1003',
-                'code' => 'EMG-1003',
+                'id' => 'EMG-003',
+                'code' => 'EMG-003',
                 'createdTime' => date('Y-m-d H:i:s', strtotime('-3.5 hours')),
                 'responders' => 'Carlos Ruiz, David Torres',
                 'zone' => 'Zona C',
@@ -137,7 +137,17 @@ try {
     $input = json_decode(file_get_contents('php://input'), true);
 
     if ($method === 'POST' && $action === 'create') {
-        $code = 'EMG-' . rand(1000, 9999);
+        if ($db) {
+            $stmt = $db->query("SELECT MAX(id) as max_id FROM emergencias");
+            $row = $stmt->fetch();
+            $nextNum = ($row['max_id'] ?? 0) + 1;
+            $code = 'EMG-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+        } else {
+            $cases = getJsonData($jsonFile);
+            $nextNum = count($cases) + 1;
+            $code = 'EMG-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+        }
+
         $createdTime = date('Y-m-d H:i:s');
         $responders = $input['responders'] ?? '';
         $zone = $input['zone'] ?? '';

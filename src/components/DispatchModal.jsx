@@ -23,7 +23,7 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
     }
 
     const newCase = {
-      id: `EMG-${Math.floor(1000 + Math.random() * 9000)}`,
+      id: `EMG-${Math.floor(Math.random() * 900 + 1).toString().padStart(3, '0')}`,
       createdTime: new Date().toISOString(),
       responders: formData.responders,
       zone: formData.zone,

@@ -1,6 +1,6 @@
 export const INITIAL_CASES = [
   {
-    id: 'EMG-1001',
+    id: 'EMG-001',
     createdTime: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
     responders: 'Roberto Mendoza, Juan Pérez',
     zone: 'Zona A',
@@ -12,7 +12,7 @@ export const INITIAL_CASES = [
     report: null,
   },
   {
-    id: 'EMG-1002',
+    id: 'EMG-002',
     createdTime: new Date(Date.now() - 50 * 60 * 1000).toISOString(),
     responders: 'Elena Gómez, Sofia Ramírez',
     zone: 'Zona B',
@@ -24,7 +24,7 @@ export const INITIAL_CASES = [
     report: null,
   },
   {
-    id: 'EMG-1003',
+    id: 'EMG-003',
     createdTime: new Date(Date.now() - 3.5 * 60 * 60 * 1000).toISOString(),
     responders: 'Carlos Ruiz, David Torres',
     zone: 'Zona C',
@@ -42,6 +42,7 @@ export const INITIAL_CASES = [
       medicationReason: 'Control térmico y deshidratación leve por viaje',
       conclusion: 'Cefalea por fatiga de viaje con febrícula. Estable.',
       phone: '+593998765432',
+      hasWhatsApp: true,
       followUpRequired: true,
       followUpHours: 8,
       reportSubmittedAt: new Date(Date.now() - 2.5 * 60 * 60 * 1000).toISOString(),
@@ -49,7 +50,7 @@ export const INITIAL_CASES = [
     }
   },
   {
-    id: 'EMG-1004',
+    id: 'EMG-004',
     createdTime: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
     responders: 'Miguel Ángel, Lucía Fernández',
     zone: 'Otro',
@@ -67,6 +68,7 @@ export const INITIAL_CASES = [
       medicationReason: 'Prevención de infección y curación de abrasión leve',
       conclusion: 'Lesión superficial resuelta en sitio. Sin novedad.',
       phone: '+34612345678',
+      hasWhatsApp: true,
       followUpRequired: false,
       followUpHours: null,
       reportSubmittedAt: new Date(Date.now() - 9 * 60 * 60 * 1000).toISOString(),
