@@ -56,6 +56,11 @@ export default function CaseDetailModal({ isOpen, caseData, onClose, onMarkFollo
               <div className="detail-item">
                 <span className="label"><User size={14} /> Brigadistas Enviados:</span>
                 <span className="value font-semibold">{caseData.responders}</span>
+                {caseData.responderPhone && (
+                  <small className="text-cyan font-bold" style={{ display: 'block', marginTop: '2px' }}>
+                    📱 Tel. Brigadista: {caseData.responderPhone}
+                  </small>
+                )}
               </div>
               <div className="detail-item">
                 <span className="label"><MapPin size={14} /> Zona:</span>

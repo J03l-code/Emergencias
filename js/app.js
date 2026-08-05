@@ -302,6 +302,7 @@ function renderDashboardTable() {
         </td>
         <td>
           <span class="responders-text">${escapeHtml(item.responders)}</span>
+          ${item.responderPhone ? `<div class="small-subtext text-cyan font-bold">📱 Tel: ${escapeHtml(item.responderPhone)}</div>` : ''}
           <div class="small-subtext">Envío: ${formatDateStr(item.dispatchTime)}</div>
         </td>
         <td>
@@ -559,7 +560,11 @@ function openDetailModal(code) {
     <div class="detail-section">
       <h4 class="section-title">📍 Informes del Despacho y Ubicación</h4>
       <div class="detail-grid-3">
-        <div class="detail-item"><span class="label">Brigadistas Enviados:</span><span class="value font-semibold">${escapeHtml(item.responders)}</span></div>
+        <div class="detail-item">
+          <span class="label">Brigadistas Enviados:</span>
+          <span class="value font-semibold">${escapeHtml(item.responders)}</span>
+          ${item.responderPhone ? `<small class="text-cyan font-bold" style="display:block; margin-top:2px;">📱 Tel. Brigadista: ${escapeHtml(item.responderPhone)}</small>` : ''}
+        </div>
         <div class="detail-item"><span class="label">Zona:</span><span class="value">${escapeHtml(item.zone)}</span></div>
         <div class="detail-item"><span class="label">Hotel Destino:</span><span class="value font-bold text-amber">${escapeHtml(item.hotel)}</span></div>
         <div class="detail-item"><span class="label">Hora Envío:</span><span class="value">${formatDateStr(item.dispatchTime)}</span></div>
