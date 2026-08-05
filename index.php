@@ -35,6 +35,9 @@
       </div>
 
       <div class="navbar-right">
+        <button id="btnManageHotels" class="btn btn-secondary btn-sm hidden" onclick="openHotelsModal()">
+          <i data-lucide="building"></i> 🏨 Hoteles Activos
+        </button>
         <span id="dbStatusBadge" class="db-status-badge">🔄 Conectando...</span>
         <button class="btn btn-secondary btn-sm" onclick="exportJSONBackup()">
           <i data-lucide="download"></i> Respaldo JSON
@@ -204,7 +207,9 @@
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label required"><i data-lucide="building"></i> Hotel de Destino:</label>
-              <input type="text" id="dispatchHotel" class="form-control" placeholder="Ej: Hotel Ibis" required>
+              <select id="dispatchHotel" class="form-control" required>
+                <!-- Opciones cargadas dinámicamente desde la lista de hoteles activos -->
+              </select>
             </div>
 
             <div class="form-group">
@@ -354,6 +359,40 @@
 
         <div id="detailPrintContent" class="modal-body printable-area">
           <!-- Contenido llenado por JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL GESTIÓN DE HOTELES ACTIVOS -->
+    <div id="modalHotels" class="modal-backdrop hidden">
+      <div class="modal-card" style="max-width: 480px;">
+        <div class="modal-header" style="background: #f8fafc;">
+          <div class="modal-title-group">
+            <i data-lucide="building" class="modal-icon text-amber"></i>
+            <div>
+              <h3>Gestión de Hoteles Activos</h3>
+              <p>Administra la lista desplegable de hoteles para las emergencias</p>
+            </div>
+          </div>
+          <button class="btn-icon-close" onclick="closeModal('modalHotels')"><i data-lucide="x"></i></button>
+        </div>
+
+        <div class="modal-body">
+          <form onsubmit="handleAddHotel(event)" style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
+            <input type="text" id="newHotelInput" class="form-control" placeholder="Nombre del hotel (ej: Hotel Ibis)" required style="flex: 1;">
+            <button type="submit" class="btn btn-primary shadow-amber" style="white-space: nowrap;">
+              <i data-lucide="plus"></i> Agregar
+            </button>
+          </form>
+
+          <label class="form-label" style="font-weight: 700; margin-bottom: 0.5rem; display: block;">Hoteles disponibles para selección:</label>
+          <div id="hotelsListContainer" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.5rem; background: #ffffff;">
+            <!-- Lista renderizada por JS -->
+          </div>
+        </div>
+
+        <div class="modal-footer" style="justify-content: flex-end;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalHotels')">Cerrar</button>
         </div>
       </div>
     </div>

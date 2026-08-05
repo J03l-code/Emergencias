@@ -36,12 +36,16 @@ let kpiFilter = 'TODOS';
 let selectedReportFollowUpRequired = true;
 let selectedReportFollowUpHours = 8;
 
+const DEFAULT_HOTELES = ['Hotel Ibis', 'Hotel Marriott', 'Hotel Hilton', 'Hotel Radisson', 'Hotel Wyndham'];
+let globalHotels = JSON.parse(localStorage.getItem('emergencias_hotels_v1')) || DEFAULT_HOTELES;
+
 document.addEventListener('DOMContentLoaded', () => {
   // Inicializar reloj datetime-local predeterminado
   const nowISO = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
   const timeInput = document.getElementById('dispatchTime');
   if (timeInput) timeInput.value = nowISO;
 
+  populateDispatchHotelsSelect();
   fetchCases();
 });
 
@@ -647,6 +651,11 @@ function switchTab(tab) {
 
   document.getElementById('viewActiveCases').classList.toggle('hidden', tab !== 'ACTIVE');
   document.getElementById('viewDashboard').classList.toggle('hidden', tab !== 'DASHBOARD');
+
+  const btnHotels = document.getElementById('btnManageHotels');
+  if (btnHotels) {
+    btnHotels.classList.toggle('hidden', tab !== 'DASHBOARD');
+  }
 }
 
 function openPinModal() {
@@ -692,7 +701,78 @@ function setKpiFilter(filter) {
 }
 
 function openDispatchModal() {
+  populateDispatchHotelsSelect();
   openModal('modalDispatch');
+}
+
+// ----------------------------------------------------
+// GESTIÓN DE HOTELES ACTIVOS
+// ----------------------------------------------------
+
+function saveHotels() {
+  localStorage.setItem('emergencias_hotels_v1', JSON.stringify(globalHotels));
+  populateDispatchHotelsSelect();
+  renderHotelsList();
+  renderDashboardTable();
+}
+
+function populateDispatchHotelsSelect() {
+  const select = document.getElementById('dispatchHotel');
+  if (!select) return;
+  if (globalHotels.length === 0) {
+    select.innerHTML = `<option value="">-- No hay hoteles activos configurados --</option>`;
+    return;
+  }
+  select.innerHTML = globalHotels.map(h => `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join('');
+}
+
+function openHotelsModal() {
+  renderHotelsList();
+  openModal('modalHotels');
+}
+
+function renderHotelsList() {
+  const container = document.getElementById('hotelsListContainer');
+  if (!container) return;
+
+  if (globalHotels.length === 0) {
+    container.innerHTML = `<p class="text-muted text-center py-2" style="font-size:0.85rem;">No hay hoteles activos. Agregue uno arriba.</p>`;
+    return;
+  }
+
+  container.innerHTML = globalHotels.map((h, idx) => `
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+      <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">🏨 ${escapeHtml(h)}</span>
+      <button type="button" class="btn-icon btn-action-delete" title="Eliminar hotel de la lista" onclick="removeHotel(${idx})">
+        <i data-lucide="trash-2"></i>
+      </button>
+    </div>
+  `).join('');
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function handleAddHotel(e) {
+  e.preventDefault();
+  const input = document.getElementById('newHotelInput');
+  const name = (input?.value || '').trim();
+  if (!name) return;
+
+  if (globalHotels.some(h => h.toLowerCase() === name.toLowerCase())) {
+    alert('Este hotel ya existe en la lista de activos.');
+    return;
+  }
+
+  globalHotels.push(name);
+  saveHotels();
+  if (input) input.value = '';
+}
+
+function removeHotel(index) {
+  const hotelName = globalHotels[index];
+  if (!confirm(`¿Desea eliminar "${hotelName}" de la lista de hoteles activos?`)) return;
+  globalHotels.splice(index, 1);
+  saveHotels();
 }
 
 function openModal(id) {

@@ -133,15 +133,17 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
               <label htmlFor="hotel" className="form-label required">
                 <Building size={16} /> Hotel de Destino:
               </label>
-              <input
-                type="text"
+              <select
                 id="hotel"
                 className="form-control"
-                placeholder="Ej: Hotel Ibis"
-                value={formData.hotel}
+                value={formData.hotel || 'Hotel Ibis'}
                 onChange={(e) => setFormData({ ...formData, hotel: e.target.value })}
                 required
-              />
+              >
+                {(hotels && hotels.length > 0 ? hotels : ['Hotel Ibis', 'Hotel Marriott', 'Hotel Hilton', 'Hotel Radisson', 'Hotel Wyndham']).map((h) => (
+                  <option key={h} value={h}>{h}</option>
+                ))}
+              </select>
             </div>
 
             {/* Nivel de Urgencia */}
