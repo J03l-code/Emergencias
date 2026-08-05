@@ -124,12 +124,28 @@ export default function App() {
     setIsDetailModalOpen(true);
   };
 
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  const handleTabChange = (tab) => {
+    if (tab === 'DASHBOARD' && !isUnlocked) {
+      const pin = prompt('🔒 Ingrese la clave de acceso al Dashboard de Seguimiento:');
+      if (pin === '2026') {
+        setIsUnlocked(true);
+        setActiveTab('DASHBOARD');
+      } else if (pin !== null) {
+        alert('❌ Clave incorrecta. Acceso denegado.');
+      }
+      return;
+    }
+    setActiveTab(tab);
+  };
+
   return (
     <div className="app-layout">
       {/* Encabezado Principal */}
       <Navbar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         onOpenDispatchModal={() => setIsDispatchModalOpen(true)}
         onExportJSON={() => exportDatabaseJSON(cases)}
         onResetDB={handleResetDB}
@@ -143,7 +159,7 @@ export default function App() {
           activeFilter={activeFilter}
           onSelectFilter={(filter) => {
             setActiveFilter(filter);
-            setActiveTab('DASHBOARD'); // Cambiar a vista dashboard al hacer clic en KPI
+            handleTabChange('DASHBOARD');
           }}
         />
 

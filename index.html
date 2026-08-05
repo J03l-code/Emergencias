@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Brigadas Médicas - Gestión de Emergencias & Seguimiento</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚑</text></svg>">
-  <link rel="stylesheet" href="css/style.css?v=3.0">
+  <link rel="stylesheet" href="css/style.css?v=4.0">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <div id="app" class="app-layout">
-    <!-- Navbar Encabezado (NO STICKY - Se desplaza y desaparece naturally) -->
+    <!-- Navbar Encabezado (NO STICKY - Se desplaza y desaparece naturalmente) -->
     <header class="navbar-container">
       <div class="navbar-left">
         <div class="brand-badge">
@@ -337,8 +337,37 @@
         </div>
       </div>
     </div>
+
+    <!-- MODAL DE SEGURIDAD PARA DASHBOARD (CLAVE: 2026) -->
+    <div id="modalPin" class="modal-backdrop hidden">
+      <div class="modal-card" style="max-width: 420px;">
+        <div class="modal-header" style="background: #f8fafc;">
+          <div class="modal-title-group">
+            <i data-lucide="lock" class="modal-icon text-amber"></i>
+            <div>
+              <h3>Acceso Protegido al Dashboard</h3>
+              <p>Ingrese la clave de seguridad de 4 dígitos</p>
+            </div>
+          </div>
+          <button class="btn-icon-close" onclick="closeModal('modalPin')"><i data-lucide="x"></i></button>
+        </div>
+
+        <form onsubmit="verifyPinSubmit(event)" class="modal-body text-center">
+          <div class="form-group" style="margin: 1rem 0;">
+            <label class="form-label required" style="justify-content: center;"><i data-lucide="key"></i> Clave de Acceso:</label>
+            <input type="password" id="pinInputCode" class="form-control text-center" style="font-size: 1.5rem; letter-spacing: 0.5rem; font-weight: 800; max-width: 220px; margin: 0.5rem auto 0 auto;" placeholder="••••" maxlength="10" required autocomplete="off">
+            <span id="pinErrorMsg" class="text-red text-xs mt-2 hidden font-bold" style="color: var(--color-red); font-size: 0.8rem; margin-top: 0.5rem;">❌ Clave incorrecta. Acceso denegado.</span>
+          </div>
+
+          <div class="modal-footer" style="justify-content: center;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalPin')">Cancelar</button>
+            <button type="submit" class="btn btn-primary shadow-amber"><i data-lucide="unlock"></i> Ingresar al Dashboard</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
-  <script src="js/app.js?v=3.0"></script>
+  <script src="js/app.js?v=4.0"></script>
 </body>
 </html>

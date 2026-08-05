@@ -562,10 +562,19 @@ function openDetailModal(code) {
 }
 
 // ----------------------------------------------------
-// NAVEGACIÓN DE PESTAÑAS Y MODALES
+// NAVEGACIÓN DE PESTAÑAS, AUTENTICACIÓN (PIN: 2026) Y MODALES
 // ----------------------------------------------------
 
+let isDashboardUnlocked = false;
+let pendingTabTarget = null;
+
 function switchTab(tab) {
+  if (tab === 'DASHBOARD' && !isDashboardUnlocked) {
+    pendingTabTarget = 'DASHBOARD';
+    openPinModal();
+    return;
+  }
+
   currentTab = tab;
   document.getElementById('btnTabActive').className = `nav-tab ${tab === 'ACTIVE' ? 'active' : ''}`;
   document.getElementById('btnTabDashboard').className = `nav-tab ${tab === 'DASHBOARD' ? 'active' : ''}`;
@@ -574,8 +583,44 @@ function switchTab(tab) {
   document.getElementById('viewDashboard').classList.toggle('hidden', tab !== 'DASHBOARD');
 }
 
+function openPinModal() {
+  const pinInput = document.getElementById('pinInputCode');
+  if (pinInput) pinInput.value = '';
+  const errorText = document.getElementById('pinErrorMsg');
+  if (errorText) errorText.classList.add('hidden');
+  openModal('modalPin');
+  setTimeout(() => { if (pinInput) pinInput.focus(); }, 150);
+}
+
+function verifyPinSubmit(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('pinInputCode')?.value.trim();
+  const errorText = document.getElementById('pinErrorMsg');
+
+  if (input === '2026') {
+    isDashboardUnlocked = true;
+    closeModal('modalPin');
+    if (pendingTabTarget === 'DASHBOARD') {
+      pendingTabTarget = null;
+      switchTab('DASHBOARD');
+    }
+  } else {
+    if (errorText) {
+      errorText.innerText = '❌ Clave incorrecta. Intente nuevamente.';
+      errorText.classList.remove('hidden');
+    } else {
+      alert('❌ Clave incorrecta. Acceso denegado.');
+    }
+  }
+}
+
 function setKpiFilter(filter) {
   kpiFilter = filter;
+  if (!isDashboardUnlocked) {
+    pendingTabTarget = 'DASHBOARD';
+    openPinModal();
+    return;
+  }
   switchTab('DASHBOARD');
   renderDashboardTable();
 }
