@@ -46,8 +46,25 @@ document.addEventListener('DOMContentLoaded', () => {
   if (timeInput) timeInput.value = nowISO;
 
   populateDispatchHotelsSelect();
+  fetchHotels();
   fetchCases();
 });
+
+// Cargar lista de hoteles activos desde el servidor
+async function fetchHotels() {
+  try {
+    const res = await fetch('api.php?action=get_hotels');
+    const json = await res.json();
+    if (json.status === 'success' && Array.isArray(json.data) && json.data.length > 0) {
+      globalHotels = json.data;
+      localStorage.setItem('emergencias_hotels_v1', JSON.stringify(globalHotels));
+    }
+  } catch (err) {
+    console.warn('API get_hotels fallback:', err);
+  }
+  populateDispatchHotelsSelect();
+  renderHotelsList();
+}
 
 // Detectar país en vivo desde el número de teléfono con +
 function detectPhoneCountryLive() {
@@ -709,11 +726,21 @@ function openDispatchModal() {
 // GESTIÓN DE HOTELES ACTIVOS
 // ----------------------------------------------------
 
-function saveHotels() {
+async function saveHotels() {
   localStorage.setItem('emergencias_hotels_v1', JSON.stringify(globalHotels));
   populateDispatchHotelsSelect();
   renderHotelsList();
   renderDashboardTable();
+
+  try {
+    await fetch('api.php?action=save_hotels', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hotels: globalHotels })
+    });
+  } catch (err) {
+    console.warn('API save_hotels fallback:', err);
+  }
 }
 
 function populateDispatchHotelsSelect() {

@@ -3,6 +3,9 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -14,6 +17,20 @@ date_default_timezone_set('America/Guayaquil');
 
 $db = getDBConnection();
 $jsonFile = __DIR__ . '/database.json';
+$hotelsFile = __DIR__ . '/hotels.json';
+
+function getHotelsData($hotelsFile) {
+    if (!file_exists($hotelsFile)) {
+        $defaultHotels = ['Hotel Ibis', 'Hotel Marriott', 'Hotel Hilton', 'Hotel Radisson', 'Hotel Wyndham'];
+        file_put_contents($hotelsFile, json_encode($defaultHotels, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        return $defaultHotels;
+    }
+    return json_decode(file_get_contents($hotelsFile), true) ?: [];
+}
+
+function saveHotelsData($hotelsFile, $data) {
+    file_put_contents($hotelsFile, json_encode(array_values($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+}
 
 // Inicializar datos JSON si MySQL aún no está configurado
 function getJsonData($jsonFile) {
@@ -87,6 +104,20 @@ $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? 'list';
 
 try {
+    if ($method === 'GET' && $action === 'get_hotels') {
+        $hotels = getHotelsData($hotelsFile);
+        echo json_encode(['status' => 'success', 'data' => $hotels]);
+        exit();
+    }
+
+    if ($method === 'POST' && $action === 'save_hotels') {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $hotels = $input['hotels'] ?? [];
+        saveHotelsData($hotelsFile, $hotels);
+        echo json_encode(['status' => 'success', 'message' => 'Hoteles guardados']);
+        exit();
+    }
+
     if ($method === 'GET' && $action === 'list') {
         if ($db) {
             $stmt = $db->query("SELECT * FROM emergencias ORDER BY id DESC");
