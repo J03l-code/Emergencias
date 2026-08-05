@@ -6,9 +6,9 @@ export default function MedicalReportModal({ isOpen, caseData, onClose, onSubmit
   if (!isOpen || !caseData) return null;
 
   const [formData, setFormData] = useState({
-    patientName: caseData.report?.patientName || '',
+    patientName: caseData.patientName || caseData.report?.patientName || '',
     room: caseData.report?.room || '',
-    vitals: caseData.report?.vitals || 'PA: 120/80 mmHg, FC: 75 bpm, SpO2: 98%, Temp: 36.5°C',
+    vitals: caseData.report?.vitals || '',
     details: caseData.report?.details || '',
     medication: caseData.report?.medication || '',
     medicationReason: caseData.report?.medicationReason || '',

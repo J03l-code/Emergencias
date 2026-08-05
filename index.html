@@ -120,10 +120,18 @@
 
           <div class="filter-controls">
             <div class="filter-item">
-              <i data-lucide="filter"></i>
+              <i data-lucide="map-pin"></i>
               <span>Zona:</span>
               <select id="zoneSelectFilter" class="select-filter" onchange="renderDashboardTable()">
                 <option value="ALL">Todas las Zonas</option>
+              </select>
+            </div>
+
+            <div class="filter-item">
+              <i data-lucide="building"></i>
+              <span>Hotel:</span>
+              <select id="hotelSelectFilter" class="select-filter" onchange="renderDashboardTable()">
+                <option value="ALL">Todos los Hoteles</option>
               </select>
             </div>
           </div>
@@ -166,6 +174,11 @@
         </div>
 
         <form onsubmit="handleDispatchSubmit(event)" class="modal-body">
+          <div class="form-group">
+            <label class="form-label required"><i data-lucide="user"></i> Nombre del Hermano / Paciente a atender:</label>
+            <input type="text" id="dispatchPatientName" class="form-control" placeholder="Ej: Gabriel Silva" required>
+          </div>
+
           <div class="form-group">
             <label class="form-label required"><i data-lucide="user-check"></i> Personas que asisten (Brigadistas):</label>
             <input type="text" id="dispatchResponders" class="form-control" placeholder="Ej: Roberto Mendoza, Juan Pérez" required>
@@ -220,7 +233,7 @@
             <i data-lucide="clipboard-check" class="modal-icon text-emerald"></i>
             <div>
               <h3>Formulario de Atención Médica (10 Campos)</h3>
-              <p id="reportModalSubhead">Caso: EMG-1001</p>
+              <p id="reportModalSubhead">Caso: EMG-001</p>
             </div>
           </div>
           <button class="btn-icon-close" onclick="closeModal('modalReport')"><i data-lucide="x"></i></button>
@@ -330,7 +343,7 @@
             <i data-lucide="activity" class="modal-icon text-cyan"></i>
             <div>
               <h3>Ficha Clínica de Atención Médica</h3>
-              <p id="detailModalSubhead">Caso: EMG-1001</p>
+              <p id="detailModalSubhead">Caso: EMG-001</p>
             </div>
           </div>
           <div class="header-actions-row">
@@ -342,6 +355,40 @@
         <div id="detailPrintContent" class="modal-body printable-area">
           <!-- Contenido llenado por JS -->
         </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN DE LLEGADA CON TELÉFONO DEL BRIGADISTA -->
+    <div id="modalArrivalPhone" class="modal-backdrop hidden">
+      <div class="modal-card" style="max-width: 440px;">
+        <div class="modal-header" style="background: #fffbebfb;">
+          <div class="modal-title-group">
+            <i data-lucide="map-pin" class="modal-icon text-amber"></i>
+            <div>
+              <h3>Confirmar Arribo a Hotel</h3>
+              <p id="arrivalModalSubhead">Caso: EMG-001</p>
+            </div>
+          </div>
+          <button class="btn-icon-close" onclick="closeModal('modalArrivalPhone')"><i data-lucide="x"></i></button>
+        </div>
+
+        <form onsubmit="handleArrivalPhoneSubmit(event)" class="modal-body">
+          <input type="hidden" id="arrivalCaseCode">
+
+          <div class="form-group">
+            <label class="form-label required">📱 Ingrese su Teléfono de Brigadista (quien asiste):</label>
+            <div class="phone-input-wrapper">
+              <span id="arrivalPhoneFlagBadge" class="flag-badge">📱</span>
+              <input type="text" id="arrivalResponderPhone" class="form-control phone-input-field" placeholder="Ej: +593998765432" oninput="detectArrivalPhoneCountryLive()" required>
+            </div>
+            <span id="arrivalPhoneCountryText" class="country-detected-badge hint">💡 Requerido para verificar quién confirmó la llegada al hotel.</span>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalArrivalPhone')">Cancelar</button>
+            <button type="submit" class="btn btn-primary shadow-amber">📍 Confirmar Arribo e Iniciar Atención</button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -375,6 +422,6 @@
     </div>
   </div>
 
-  <script src="js/app.js?v=5.0"></script>
+  <script src="js/app.js?v=6.0"></script>
 </body>
 </html>

@@ -223,14 +223,24 @@ function renderDashboardTable() {
   const tbody = document.getElementById('dashboardTableBody');
   const search = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
   const selectedZone = document.getElementById('zoneSelectFilter')?.value || 'ALL';
+  const selectedHotel = document.getElementById('hotelSelectFilter')?.value || 'ALL';
 
   // Poblar filtro de zonas
   const zoneSelect = document.getElementById('zoneSelectFilter');
   if (zoneSelect) {
     const uniqueZones = Array.from(new Set(globalCases.map(c => c.zone)));
-    const current = zoneSelect.value;
+    const currentZone = zoneSelect.value || 'ALL';
     zoneSelect.innerHTML = `<option value="ALL">Todas las Zonas</option>` + 
-      uniqueZones.map(z => `<option value="${escapeHtml(z)}" ${z === current ? 'selected' : ''}>${escapeHtml(z)}</option>`).join('');
+      uniqueZones.map(z => `<option value="${escapeHtml(z)}" ${z === currentZone ? 'selected' : ''}>${escapeHtml(z)}</option>`).join('');
+  }
+
+  // Poblar filtro de hoteles
+  const hotelSelect = document.getElementById('hotelSelectFilter');
+  if (hotelSelect) {
+    const uniqueHotels = Array.from(new Set(globalCases.map(c => c.hotel).filter(Boolean)));
+    const currentHotel = hotelSelect.value || 'ALL';
+    hotelSelect.innerHTML = `<option value="ALL">Todos los Hoteles</option>` + 
+      uniqueHotels.map(h => `<option value="${escapeHtml(h)}" ${h === currentHotel ? 'selected' : ''}>${escapeHtml(h)}</option>`).join('');
   }
 
   const filtered = globalCases.filter(item => {
@@ -240,12 +250,13 @@ function renderDashboardTable() {
     if (kpiFilter === 'RESUELTO' && item.status !== 'RESUELTO' && (!item.report || !item.report.followUpDone)) return false;
 
     if (selectedZone !== 'ALL' && item.zone !== selectedZone) return false;
+    if (selectedHotel !== 'ALL' && item.hotel !== selectedHotel) return false;
 
     if (search !== '') {
       const matchId = item.id.toLowerCase().includes(search);
       const matchHotel = item.hotel.toLowerCase().includes(search);
       const matchResp = item.responders.toLowerCase().includes(search);
-      const matchPatient = item.report?.patientName?.toLowerCase().includes(search) || false;
+      const matchPatient = (item.patientName || item.report?.patientName || '').toLowerCase().includes(search);
       const matchRoom = item.report?.room?.toString().includes(search) || false;
       const matchPhone = item.report?.phone?.toLowerCase().includes(search) || false;
       return matchId || matchHotel || matchResp || matchPatient || matchRoom || matchPhone;
@@ -264,20 +275,21 @@ function renderDashboardTable() {
     const countdown = item.report?.followUpRequired
       ? getFollowUpCountdown(item.report.reportSubmittedAt, item.report.followUpHours)
       : null;
+    const patientName = item.patientName || item.report?.patientName;
 
     return `
       <tr class="${countdown?.status === 'overdue' ? 'row-overdue' : ''}">
         <td>
-          <div class="table-id-cell">
-            <strong>${item.id}</strong>
-            <span class="badge badge-urgency-${item.urgency}">${item.urgency}</span>
+          <div class="code-urgency-cell">
+            <span class="case-code">${item.id}</span>
+            <span class="badge ${item.urgency === 'P1' ? 'badge-danger' : item.urgency === 'P2' ? 'badge-warning' : 'badge-info'}">${item.urgency}</span>
           </div>
         </td>
         <td>
-          ${item.report?.patientName ? `
+          ${patientName ? `
             <div>
-              <strong class="text-cyan">${escapeHtml(item.report.patientName)}</strong>
-              <div class="small-subtext">Diagnóstico: ${escapeHtml(item.report.conclusion)}</div>
+              <strong class="text-cyan">${escapeHtml(patientName)}</strong>
+              ${item.report?.conclusion ? `<div class="small-subtext">Diagnóstico: ${escapeHtml(item.report.conclusion)}</div>` : ''}
             </div>
           ` : `<span class="text-muted">Pendiente de reporte</span>`}
         </td>
@@ -347,38 +359,66 @@ function renderDashboardTable() {
 // ACCIONES CRUD Y MANEJADORES DE EVENTOS
 // ----------------------------------------------------
 
-async function markArrival(code) {
+function markArrival(code) {
+  const item = globalCases.find(c => c.id === code);
+  document.getElementById('arrivalCaseCode').value = code;
+  document.getElementById('arrivalModalSubhead').innerText = `Caso: ${code} | Hotel: ${item?.hotel || ''}`;
+  document.getElementById('arrivalResponderPhone').value = item?.responderPhone || '+593';
+  detectArrivalPhoneCountryLive();
+  openModal('modalArrivalPhone');
+}
+
+function detectArrivalPhoneCountryLive() {
+  const phone = document.getElementById('arrivalResponderPhone')?.value || '';
+  const info = detectCountryFromPhone(phone);
+  const badge = document.getElementById('arrivalPhoneFlagBadge');
+  const text = document.getElementById('arrivalPhoneCountryText');
+  if (badge) badge.innerText = info.flag;
+  if (text) text.innerHTML = `💡 País: <strong>${info.country}</strong> (${info.code || ''})`;
+}
+
+async function handleArrivalPhoneSubmit(e) {
+  e.preventDefault();
+  const code = document.getElementById('arrivalCaseCode').value;
+  const responderPhone = document.getElementById('arrivalResponderPhone').value.trim();
   const arrivalTime = new Date().toISOString();
+
+  if (!responderPhone) {
+    alert('Ingrese su número de teléfono de brigadista.');
+    return;
+  }
+
   try {
     await fetch('api.php?action=mark_arrival', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: code, arrivalTime })
+      body: JSON.stringify({ id: code, arrivalTime, responderPhone })
     });
-  } catch (e) {
-    console.warn('API error:', e);
+  } catch (err) {
+    console.warn('API error:', err);
   }
 
-  // Actualización local para velocidad inmediata
-  globalCases = globalCases.map(c => c.id === code ? { ...c, status: 'EN_ATENCION', arrivalTime } : c);
+  globalCases = globalCases.map(c => c.id === code ? { ...c, status: 'EN_ATENCION', arrivalTime, responderPhone } : c);
   localStorage.setItem('emergencias_local_v1', JSON.stringify(globalCases));
+  closeModal('modalArrivalPhone');
   renderAll();
 }
 
 async function handleDispatchSubmit(e) {
   e.preventDefault();
+  const patientName = document.getElementById('dispatchPatientName').value.trim();
   const responders = document.getElementById('dispatchResponders').value.trim();
   const zone = document.getElementById('dispatchZone').value;
   const dispatchTime = document.getElementById('dispatchTime').value;
   const hotel = document.getElementById('dispatchHotel').value.trim();
   const urgency = document.getElementById('dispatchUrgency').value;
 
-  if (!responders || !hotel) {
-    alert('Complete los campos requeridos.');
+  if (!patientName || !responders || !hotel) {
+    alert('Complete todos los campos requeridos (Hermano a atender, Brigadistas y Hotel).');
     return;
   }
 
-  const payload = { responders, zone, dispatchTime, hotel, urgency };
+  const payload = { patientName, responders, zone, dispatchTime, hotel, urgency };
 
   try {
     await fetch('api.php?action=create', {
@@ -400,11 +440,13 @@ function openReportModal(code) {
 
   document.getElementById('reportCaseCode').value = code;
   document.getElementById('reportModalSubhead').innerText = `Caso: ${code} | Hotel: ${item.hotel}`;
-  document.getElementById('reportPatientName').value = item.report?.patientName || '';
+  document.getElementById('reportPatientName').value = item.patientName || item.report?.patientName || '';
   document.getElementById('reportRoom').value = item.report?.room || '';
-  document.getElementById('reportVitals').value = item.report?.vitals || 'PA: 120/80 mmHg, FC: 75 bpm, SpO2: 98%, Temp: 36.5°C';
+  document.getElementById('reportVitals').value = item.report?.vitals || '';
+  document.getElementById('reportVitals').placeholder = 'Ej: PA: 120/80 mmHg, FC: 75 bpm, SpO2: 98%, Temp: 36.5°C';
   document.getElementById('reportDetails').value = item.report?.details || '';
   document.getElementById('reportMedication').value = item.report?.medication || '';
+  document.getElementById('reportMedication').placeholder = 'Medicamentos suministrados o aplicados...';
   document.getElementById('reportMedReason').value = item.report?.medicationReason || '';
   document.getElementById('reportConclusion').value = item.report?.conclusion || '';
   document.getElementById('reportPhone').value = item.report?.phone || '+593';

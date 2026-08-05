@@ -5,6 +5,7 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
   const nowStr = new Date().toISOString().slice(0, 16);
 
   const [formData, setFormData] = useState({
+    patientName: '',
     responders: '',
     zone: 'Zona A',
     dispatchTime: nowStr,
@@ -17,14 +18,15 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.responders.trim() || !formData.hotel.trim()) {
-      alert('Por favor complete los campos obligatorios: Brigadistas y Hotel.');
+    if (!formData.patientName.trim() || !formData.responders.trim() || !formData.hotel.trim()) {
+      alert('Por favor complete los campos obligatorios: Hermano a atender, Brigadistas y Hotel.');
       return;
     }
 
     const newCase = {
       id: `EMG-${Math.floor(Math.random() * 900 + 1).toString().padStart(3, '0')}`,
       createdTime: new Date().toISOString(),
+      patientName: formData.patientName,
       responders: formData.responders,
       zone: formData.zone,
       dispatchTime: new Date(formData.dispatchTime).toISOString(),
@@ -57,6 +59,21 @@ export default function DispatchModal({ isOpen, onClose, onSave }) {
         </div>
 
         <form onSubmit={handleSubmit} className="modal-body">
+          {/* Hermano a atender */}
+          <div className="form-group">
+            <label htmlFor="dispatchPatientName" className="form-label required">
+              Nombre del Hermano / Paciente a atender:
+            </label>
+            <input
+              type="text"
+              id="dispatchPatientName"
+              className="form-control"
+              placeholder="Ej: Gabriel Silva"
+              value={formData.patientName}
+              onChange={(e) => setFormData({ ...formData, patientName: e.target.value })}
+              required
+            />
+          </div>
           {/* 1. Personas que asisten */}
           <div className="form-group">
             <label htmlFor="responders" className="form-label required">

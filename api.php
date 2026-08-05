@@ -94,7 +94,7 @@ try {
             $cases = [];
             foreach ($rows as $row) {
                 $report = null;
-                if (!empty($row['patient_name'])) {
+                if (!empty($row['room']) || !empty($row['vitals']) || !empty($row['conclusion'])) {
                     $report = [
                         'patientName' => $row['patient_name'],
                         'room' => $row['room'],
@@ -115,7 +115,9 @@ try {
                     'id' => $row['code'],
                     'db_id' => $row['id'],
                     'createdTime' => $row['created_time'],
+                    'patientName' => $row['patient_name'],
                     'responders' => $row['responders'],
+                    'responderPhone' => $row['responder_phone'],
                     'zone' => $row['zone'],
                     'dispatchTime' => $row['dispatch_time'],
                     'hotel' => $row['hotel'],
@@ -149,6 +151,7 @@ try {
         }
 
         $createdTime = date('Y-m-d H:i:s');
+        $patientName = $input['patientName'] ?? '';
         $responders = $input['responders'] ?? '';
         $zone = $input['zone'] ?? '';
         $dispatchTime = $input['dispatchTime'] ?? $createdTime;
@@ -157,15 +160,17 @@ try {
         $status = 'EN_CAMINO';
 
         if ($db) {
-            $stmt = $db->prepare("INSERT INTO emergencias (code, created_time, responders, zone, dispatch_time, hotel, urgency, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$code, $createdTime, $responders, $zone, $dispatchTime, $hotel, $urgency, $status]);
+            $stmt = $db->prepare("INSERT INTO emergencias (code, created_time, patient_name, responders, zone, dispatch_time, hotel, urgency, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$code, $createdTime, $patientName, $responders, $zone, $dispatchTime, $hotel, $urgency, $status]);
         } else {
             $cases = getJsonData($jsonFile);
             $newCase = [
                 'id' => $code,
                 'code' => $code,
                 'createdTime' => $createdTime,
+                'patientName' => $patientName,
                 'responders' => $responders,
+                'responderPhone' => null,
                 'zone' => $zone,
                 'dispatchTime' => $dispatchTime,
                 'hotel' => $hotel,
@@ -184,16 +189,18 @@ try {
     if ($method === 'POST' && $action === 'mark_arrival') {
         $code = $input['id'] ?? '';
         $arrivalTime = !empty($input['arrivalTime']) ? $input['arrivalTime'] : date('Y-m-d H:i:s');
+        $responderPhone = $input['responderPhone'] ?? null;
 
         if ($db) {
-            $stmt = $db->prepare("UPDATE emergencias SET status = 'EN_ATENCION', arrival_time = ? WHERE code = ?");
-            $stmt->execute([$arrivalTime, $code]);
+            $stmt = $db->prepare("UPDATE emergencias SET status = 'EN_ATENCION', arrival_time = ?, responder_phone = ? WHERE code = ?");
+            $stmt->execute([$arrivalTime, $responderPhone, $code]);
         } else {
             $cases = getJsonData($jsonFile);
             foreach ($cases as &$item) {
                 if ($item['id'] === $code) {
                     $item['status'] = 'EN_ATENCION';
                     $item['arrivalTime'] = $arrivalTime;
+                    $item['responderPhone'] = $responderPhone;
                 }
             }
             saveJsonData($jsonFile, $cases);

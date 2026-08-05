@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS `emergencias` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `code` VARCHAR(20) NOT NULL UNIQUE,
   `created_time` DATETIME NOT NULL,
+  `patient_name` VARCHAR(255) NULL,
   `responders` VARCHAR(255) NOT NULL,
+  `responder_phone` VARCHAR(50) NULL,
   `zone` VARCHAR(100) NOT NULL,
   `dispatch_time` DATETIME NOT NULL,
   `hotel` VARCHAR(255) NOT NULL,
@@ -16,7 +18,6 @@ CREATE TABLE IF NOT EXISTS `emergencias` (
   `notes` TEXT NULL,
   
   -- Campos del Reporte Médico Formulario (10 Campos + WhatsApp)
-  `patient_name` VARCHAR(255) NULL,
   `room` VARCHAR(50) NULL,
   `vitals` TEXT NULL,
   `details` TEXT NULL,
@@ -35,9 +36,9 @@ CREATE TABLE IF NOT EXISTS `emergencias` (
 
 -- Insertar datos iniciales de demostración desde EMG-001
 INSERT INTO `emergencias` 
-(`code`, `created_time`, `responders`, `zone`, `dispatch_time`, `hotel`, `urgency`, `status`, `arrival_time`, `patient_name`, `room`, `vitals`, `details`, `medication`, `medication_reason`, `conclusion`, `phone`, `has_whatsapp`, `follow_up_required`, `follow_up_hours`, `report_submitted_at`, `follow_up_done`)
+(`code`, `created_time`, `patient_name`, `responders`, `responder_phone`, `zone`, `dispatch_time`, `hotel`, `urgency`, `status`, `arrival_time`, `room`, `vitals`, `details`, `medication`, `medication_reason`, `conclusion`, `phone`, `has_whatsapp`, `follow_up_required`, `follow_up_hours`, `report_submitted_at`, `follow_up_done`)
 VALUES
-('EMG-001', NOW() - INTERVAL 25 MINUTE, 'Roberto Mendoza, Juan Pérez', 'Zona A', NOW() - INTERVAL 25 MINUTE, 'Hotel Ibis', 'P1', 'EN_CAMINO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 0),
-('EMG-002', NOW() - INTERVAL 50 MINUTE, 'Elena Gómez, Sofia Ramírez', 'Zona B', NOW() - INTERVAL 50 MINUTE, 'Hotel Ibis', 'P2', 'EN_ATENCION', NOW() - INTERVAL 18 MINUTE, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 0),
-('EMG-003', NOW() - INTERVAL 210 MINUTE, 'Carlos Ruiz, David Torres', 'Zona C', NOW() - INTERVAL 210 MINUTE, 'Hotel Ibis', 'P2', 'ATENDIDO_SEGUIMIENTO', NOW() - INTERVAL 180 MINUTE, 'Mateo Alvarado', '408', 'PA: 135/85 mmHg, FC: 82 bpm, SpO2: 97%, Temp: 37.8°C', 'Presenta cuadro febril moderado y cefalea leve iniciada en la mañana.', 'Paracetamol 500mg (1 tab) + Suero oral', 'Control térmico y deshidratación leve por viaje', 'Cefalea por fatiga de viaje con febrícula. Estable.', '+593998765432', 1, 1, 8, NOW() - INTERVAL 150 MINUTE, 0),
-('EMG-004', NOW() - INTERVAL 600 MINUTE, 'Miguel Ángel, Lucía Fernández', 'Otro', NOW() - INTERVAL 600 MINUTE, 'Hotel Ibis', 'P3', 'RESUELTO', NOW() - INTERVAL 570 MINUTE, 'Carmen Benítez', '215', 'PA: 118/75 mmHg, FC: 70 bpm, SpO2: 99%, Temp: 36.4°C', 'Rozadura menor en tobillo derecho por caminata.', 'Curación antiséptica local + Vendaje estéril', 'Prevención de infección y curación de abrasión leve', 'Lesión superficial resuelta en sitio. Sin novedad.', '+34612345678', 1, 0, NULL, NOW() - INTERVAL 540 MINUTE, 1);
+('EMG-001', NOW() - INTERVAL 25 MINUTE, 'Hermano Gabriel Silva', 'Roberto Mendoza, Juan Pérez', '+593991234567', 'Zona A', NOW() - INTERVAL 25 MINUTE, 'Hotel Ibis', 'P1', 'EN_CAMINO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 0),
+('EMG-002', NOW() - INTERVAL 50 MINUTE, 'Hermana María López', 'Elena Gómez, Sofia Ramírez', '+593998765432', 'Zona B', NOW() - INTERVAL 50 MINUTE, 'Hotel Ibis', 'P2', 'EN_ATENCION', NOW() - INTERVAL 18 MINUTE, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 0),
+('EMG-003', NOW() - INTERVAL 210 MINUTE, 'Mateo Alvarado', 'Carlos Ruiz, David Torres', '+593997778899', 'Zona C', NOW() - INTERVAL 210 MINUTE, 'Hotel Marriott', 'P2', 'ATENDIDO_SEGUIMIENTO', NOW() - INTERVAL 180 MINUTE, '408', 'PA: 135/85 mmHg, FC: 82 bpm, SpO2: 97%, Temp: 37.8°C', 'Presenta cuadro febril moderado y cefalea leve iniciada en la mañana.', 'Paracetamol 500mg (1 tab) + Suero oral', 'Control térmico y deshidratación leve por viaje', 'Cefalea por fatiga de viaje con febrícula. Estable.', '+593998765432', 1, 1, 8, NOW() - INTERVAL 150 MINUTE, 0),
+('EMG-004', NOW() - INTERVAL 600 MINUTE, 'Carmen Benítez', 'Miguel Ángel, Lucía Fernández', '+34612345678', 'Otro', NOW() - INTERVAL 600 MINUTE, 'Hotel Hilton', 'P3', 'RESUELTO', NOW() - INTERVAL 570 MINUTE, '215', 'PA: 118/75 mmHg, FC: 70 bpm, SpO2: 99%, Temp: 36.4°C', 'Rozadura menor en tobillo derecho por caminata.', 'Curación antiséptica local + Vendaje estéril', 'Prevención de infección y curación de abrasión leve', 'Lesión superficial resuelta en sitio. Sin novedad.', '+34612345678', 1, 0, NULL, NOW() - INTERVAL 540 MINUTE, 1);
